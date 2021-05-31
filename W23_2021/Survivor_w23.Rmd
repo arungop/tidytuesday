@@ -90,7 +90,7 @@ ggplot(data = episode_sea,
   
   # labs
   
-  labs(title = "Survivor TV shows : Viewer ratings ",
+  labs(title = "Survivor TV show : Viewer ratings ",
     subtitle = "Popularity of Survivor TV show is diminishing over the years",
     caption = "Design: Arun Gopinath | Source: SurvivoR package | #TidyTuesday 2021W23",
        x = " Episodes",
@@ -101,7 +101,7 @@ ggplot(data = episode_sea,
   my_theme 
 
 # save image
-ggsave("test.png", width = 10, height = 8)  
+ggsave("SurvivoR.png", width = 10, height = 8)  
 
 ```
 
