@@ -1,0 +1,109 @@
+---
+title: "Tidytuesdays"
+author: "Arun Gopinath"
+date: "31/05/2021"
+output: html_document
+---
+# TidyTuesday 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+```
+
+
+# Get the weekly data
+
+```{r load}
+tuesdata_view <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/viewers.csv')
+
+```
+
+
+# Wrangle 
+```{r Wrangle}
+episode_sea <- tuesdata_view %>%
+  select(rating_18_49,episode_number_overall,episode_date,viewers) %>%
+  arrange(rating_18_49) %>%
+  na.omit  %>%
+  separate(episode_date, c("year","month","date"),remove = F) 
+
+```
+
+# Visualise
+
+```{r visualise}
+
+# my colors
+white <- "#FFFFFF"
+black <- "#000000"
+d_grey <- "#7d7d7d"
+blue <- "#049CD8"
+green <- "#43B047"
+yellow <- "#FFFF00"
+
+# my theme
+my_theme <- theme(
+  
+  # title
+  plot.title = element_text(family = "one", color = green, size = 15, hjust = 0, margin = margin(10, 0, 10, 0)),
+  
+  # subtitle
+  plot.subtitle = element_text(family = "one", color = yellow, size = 11, hjust = 0, margin = margin(0, 0, 20, 0)),
+  
+  # caption
+  plot.caption = element_text(family = "one", color = d_grey, size = 6, hjust = 0, margin = margin(20, 0, 10, 0)),
+  
+  # plot margin
+  plot.margin = unit(c(0, .3, 0, .3), "in"),
+  
+  # plot and panel background
+  plot.background = element_rect(fill = black),
+  panel.background = element_rect(fill = black),
+  
+  # remove grid
+  panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  
+  # axis text
+  axis.title = element_text(family = "one", color = white, size = 10),
+  axis.text = element_text(family = "one", color = white, size = 9),
+  # axis ticks
+  axis.ticks = element_blank()
+)
+
+# my plot
+ggplot(data = episode_sea,
+       mapping = aes(episode_number_overall, rating_18_49)) +
+  
+  # point plot layer
+  geom_point(aes(color = year >= 2008)) + 
+  
+  
+  # Separate color for year greater than 2008
+  scale_color_discrete(name="Year",
+                       labels=c("2000 - 2008", "2009 - Present"))+
+  # smooth layer
+  geom_smooth(color = "blue",show.legend = F)+
+  
+  # labs
+  
+  labs(title = "Survivor TV shows : Viewer ratings ",
+    subtitle = "Popularity of Survivor TV show is diminishing over the years",
+    caption = "Design: Arun Gopinath | Source: SurvivoR package | #TidyTuesday 2021W23",
+       x = " Episodes",
+       y = "Viewer ratings") +
+  
+  # use my theme
+  
+  my_theme 
+
+# save image
+ggsave("test.png", width = 10, height = 8)  
+
+```
+
+
+ 
