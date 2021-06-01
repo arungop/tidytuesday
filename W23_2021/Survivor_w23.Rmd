@@ -26,7 +26,7 @@ tuesdata_view <- readr::read_csv('https://raw.githubusercontent.com/rfordatascie
 ```{r Wrangle}
 episode_sea <- tuesdata_view %>%
   select(rating_18_49,episode_number_overall,episode_date,viewers) %>%
-  arrange(rating_18_49) %>%
+  arrange(episode_number_overall) %>%
   na.omit  %>%
   separate(episode_date, c("year","month","date"),remove = F) 
 
@@ -91,7 +91,7 @@ ggplot(data = episode_sea,
   # labs
   
   labs(title = "Survivor TV show : Viewer ratings ",
-    subtitle = "Popularity of Survivor TV show is diminishing over the years",
+    subtitle = "Popularity of Survivor TV show among youth is diminishing over the years",
     caption = "Design: Arun Gopinath | Source: SurvivoR package | #TidyTuesday 2021W23",
        x = " Episodes",
        y = "Viewer ratings") +
