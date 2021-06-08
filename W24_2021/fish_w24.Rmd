@@ -1,0 +1,98 @@
+---
+title: "Tidytuesdays"
+author: "Arun Gopinath"
+date: "08/06/2021"
+output: html_document
+---
+# TidyTuesday 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+library(RColorBrewer)
+```
+
+# Get the weekly data
+
+```{r load}
+fishing <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-08/fishing.csv')
+
+```
+
+# Wrangle 
+
+```{r Wrangle}
+erie <- fishing %>% group_by(species) %>%
+  
+  # look for Erie lake & year >= 2015
+  filter(lake == c("Erie") , year >=1915)%>% 
+  
+  # look for popular species
+  filter(species == c("White Perch","Crappie",
+                      "Blue Pike","Cisco","Channel Catfish","Rainbow Smelt")) %>% 
+  select(grand_total,year,species,lake) %>% 
+  na.omit()
+
+```
+# Visualise
+
+```{r visualise}
+
+
+ggplot(erie,aes(year, fill = species), group = species)+
+  
+  # plot area
+  geom_area(aes(y = grand_total),alpha = 0.8)+
+  
+  # custom color
+  scale_fill_brewer(palette="Dark2")+
+  
+  # labs
+  labs(title="One person's loss is another person's gain", 
+       subtitle="Distribution of fishes in Erie lake over the years",
+       caption="Design: Arun Gopinath | Source:  Great Lakes Fishery Commission | #TidyTuesday 2021W24",
+       x="Year",
+       y ="Grand total",
+       fill="# Species")+
+  
+       # my theme
+  
+  theme(# panel background
+        panel.background = element_rect(fill = 'light yellow', colour = 'blue'),
+       
+        # plot background
+        plot.background = element_rect(fill = 'light yellow',color = 'blue'),
+        
+        # legend background
+        legend.background = element_rect(fill = 'light yellow'),
+        
+        # axis title
+        axis.title = element_text( color = 'black', size = 10),
+        
+        # axis subtitle
+        axis.text = element_text(color = 'black', size = 9),
+        
+        # title
+        plot.title = element_text( color = 'navy blue', size = 15, hjust = 0, margin = margin(10, 0, 10, 0)),
+        
+        # subtitle
+        plot.subtitle = element_text(color = 'blue', size = 11, hjust = 0, margin = margin(0, 0, 20, 0)),
+        
+        # caption
+        plot.caption = element_text(color = 'red', size = 8, hjust = 0, margin = margin(20, 0, 10, 0)),
+        
+        # avoid grid
+        panel.grid = element_blank())
+
+
+# Save the plot -----------------------------------------------------------
+
+ggsave("Erie.png", width = 10, height = 8) 
+
+
+```
+
+
+
