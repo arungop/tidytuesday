@@ -9,7 +9,7 @@ These are my contributions to the #TidyTuesday challenge organized by the R4DS o
 ### 2021-06-16 | Week 25 | #DuBois Challenge |
 [Code](https://github.com/arungop/tidytuesday/tree/main/W25_2021)
 
-[![alt text](https://github.com/arungop/tidytuesday/blob/main/W24_2021/DuBoisChallenge.png)](https://github.com/arungop/tidytuesday/tree/main/W25_2021)
+[![alt text](https://github.com/arungop/tidytuesday/blob/main/W25_2021/DuBoisChallenge.png)](https://github.com/arungop/tidytuesday/tree/main/W25_2021)
 
 ### 2021-06-08 | Week 24 | Great Lakes Fish |
 [Code](https://github.com/arungop/tidytuesday/tree/main/W24_2021)
