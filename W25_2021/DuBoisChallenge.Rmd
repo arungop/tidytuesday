@@ -1,0 +1,109 @@
+---
+title: "Tidytuesdays"
+author: "Arun Gopinath"
+date: "16/06/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+# TidyTuesday 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(ggwordcloud)
+
+defaultW <- getOption("warn") 
+
+options(warn = -1) 
+```
+
+# Get the weekly data
+
+```{r load}
+tweets <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-15/tweets.csv')
+
+```
+
+# Wrangle 
+
+```{r}
+user_engagement <- tweets %>%
+  mutate (total_engagement = (retweet_count + like_count + quote_count)) %>%
+  group_by(username) %>%
+  summarise(total_tweet = n(),
+            retweet_count = sum(retweet_count),
+            like_count = sum(like_count),
+            quote_count = sum(quote_count),
+            total_engagement = sum(total_engagement)) %>%
+  arrange(desc(total_engagement)) %>% 
+  filter(total_engagement > 100)
+```
+
+# Visualise
+
+```{r visualise}
+
+# my colors
+white <- "#FFFFFF"
+black <- "#000000"
+d_grey <- "#7d7d7d"
+blue <- "#049CD8"
+red <- "#ff0000"
+yellow <- "#FFFF00"
+
+# my theme
+my_theme <- theme(
+  
+  # title
+  plot.title = element_text(color = red, size = 14, hjust = 0.5, margin = margin(10, 0, 10, 0)),
+  
+  # subtitle
+  plot.subtitle = element_text(color = yellow, size = 12, hjust = 0.5, margin = margin(0, 0, 20, 0)),
+  
+  # caption
+  plot.caption = element_text(color = d_grey, size = 9, hjust = 0, margin = margin(20, 0, 10, 0)),
+  
+  # plot margin
+  plot.margin = unit(c(0, .3, 0, .3), "in"),
+  
+  # plot and panel background
+  plot.background = element_rect(fill = black),
+  panel.background = element_rect(fill = black),
+  
+  # remove grid
+  panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  
+  # axis text
+  axis.title = element_text( color = white, size = 10),
+  axis.text = element_text(color = white, size = 9),
+  # axis ticks
+  axis.ticks = element_blank()
+)
+
+# my plot
+ggplot(user_engagement, aes(label = username, size = total_engagement, color = total_engagement, shape = "sqaure")) +
+  
+  # ggwordcount plot
+  geom_text_wordcloud_area()+
+  
+  # Set maximum text size
+  scale_size_area(max_size = 10)+
+  
+  # Applying my theme
+  my_theme+
+  
+  # Text color variations
+  scale_color_gradient(low = "white", high = "cyan")+
+  
+  labs(
+    title = "#DuBoisChallenge in 2021 \n User with The Most Engagement (> 100)",
+    subtitle = "Total engagements (total retweet + total like + total quote)",
+    caption = "Design: Arun Gopinath | Source: #DuBoisChallenge Tweets | #TidyTuesday 2021W25",
+    x = NULL,
+    y = NULL) 
+```
